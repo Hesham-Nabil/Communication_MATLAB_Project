@@ -34,7 +34,7 @@ title('Plot Of X(t)');
 #################  frequency respone of base band signal  #################
 
 M = fftshift(fft(m))*ts;
-Analytical = 3 - 1./(2*pi*f);
+Analytical = 3*sinc(6*(f-1))+3*sinc(6*(f+1));
 
 ##############################    plotting   ##############################
 
@@ -48,7 +48,7 @@ subplot(1,2,2)
 plot(f,abs(Analytical));
 xlabel('frequency');
 ylabel('Frequency respone of m(t)');
-title('Analytical Solution');
+title('3*sinc(6*f-1)+3*sinc(6*f+1)');
 
 
 ############################        Bandwidth       #########################
