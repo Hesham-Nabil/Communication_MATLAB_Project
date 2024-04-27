@@ -201,6 +201,9 @@ Recieved_s1 = real(ifft(ifftshift(Recieved_S1) /tsx));  %s1 in time domain
 Recieved_s2 = real(ifft(ifftshift(Recieved_S2) /tsm));  % s2 in time domain
 figure(7)
 plot(tm, Recieved_s2, 'b-', tm, m, 'r-');
+figure(8)
+plot(tm, Recieved_s1, 'b-', tm, x, 'r-');
+legend("Recieved Signal","Input Signal");
 %%Recieved_S2=fftshift(fft(Transmitted_s.*c2))*tsm.*LPF;
 %%Recieved_s1 = real(ifft(ifftshift(Recieved_S1) * Nx));
 %%Recieved_s2 = real(ifft(ifftshift(Recieved_S2) * Nm));
