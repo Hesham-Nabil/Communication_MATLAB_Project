@@ -93,7 +93,7 @@ subplot(4,1,4);
 plot (f,abs(Mixer_Output_Freq_90));
 xlabel('frequency');
 title('ASK after Carrier phase 90');
-%%%%%%%%%%%%%%%%%%%%%%% LPF Applied at f=1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%% LPF Applied at f=5 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 H= abs(f)<= 5;
 LPF_Output=H.*Mixer_Output_Freq;
 LPF_Output_30=H.*Mixer_Output_Freq_30;
