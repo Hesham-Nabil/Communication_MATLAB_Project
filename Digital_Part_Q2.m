@@ -16,8 +16,9 @@ for i = 1:bits
         unipolar((i-1)*100+1:i*100) = 1;
     end
 end
-
+%%%%%%%%%%%%%%%%%%%%%%% Unipolar to freq Domain %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 UNIPOLAR= fftshift(fft(unipolar))*ts;
+%%%%%%%%%%%%%%%%%%%%%%% Ask Signal Formation in time & Freq Domain %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 fc=5;
 c=3*cos(2*pi*fc*t);
 C_30=3*cos(2*pi*fc*t+30);
@@ -25,6 +26,7 @@ C_60=3*cos(2*pi*fc*t+60);
 C_90=3*cos(2*pi*fc*t+90);
 Ask=c.*unipolar;
 Ask_frequency= fftshift(fft(Ask))*ts;
+%%%%%%%%%%%%%%%%%%%%%%% Plotting Unipolar and Ask Temporal %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 figure(1);
 subplot(2,1,1);
 plot(t, unipolar);
@@ -34,6 +36,7 @@ subplot(2,1,2);
 plot(t, Ask);
 xlabel('time');
 title('Ask in Time Domain');
+%%%%%%%%%%%%%%%%%%%%%%% Plotting Unipolar and Ask Spectral %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 figure(2)
 subplot(2,1,1);
 plot(f, abs(UNIPOLAR));
@@ -44,10 +47,12 @@ plot(f, abs(Ask_frequency));
 xlabel('Frequency (Hz)');
 title('Spectral Domain Of Ask');
 grid on;
+%%%%%%%%%%%%%%%%%%%%%%% Multiplying Carriers with different phase errors to Ask at Receiver %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Mixer_Output_Time=Ask.*(c);
 Mixer_Output_Time_30=C_30.*Ask;
 Mixer_Output_Time_60=C_60.*Ask;
 Mixer_Output_Time_90=C_90.*Ask;
+%%%%%%%%%%%%%%%%%%%%%%% Comparing in time domain different phase errors After Carrier Multiplication in Mixer %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 figure(3)
 subplot(4,1,1);
 plot (t,Mixer_Output_Time);
@@ -66,6 +71,7 @@ plot(t, Mixer_Output_Time_90);
 xlabel('time');
 title('ASK after Carrier phase 90');
 grid on;
+%%%%%%%%%%%%%%%%%%%%%%% Comparing in Freq Domain different phase errors After Carrier Multiplication in Mixer %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Mixer_Output_Freq= fftshift(fft(Mixer_Output_Time))*ts;
 Mixer_Output_Freq_30= fftshift(fft(Mixer_Output_Time_30))*ts;
 Mixer_Output_Freq_60= fftshift(fft(Mixer_Output_Time_60))*ts;
@@ -87,11 +93,13 @@ subplot(4,1,4);
 plot (f,abs(Mixer_Output_Freq_90));
 xlabel('frequency');
 title('ASK after Carrier phase 90');
+%%%%%%%%%%%%%%%%%%%%%%% LPF Applied at f=1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 H= abs(f)<= 1;
 LPF_Output=H.*Mixer_Output_Freq;
 LPF_Output_30=H.*Mixer_Output_Freq_30;
 LPF_Output_60=H.*Mixer_Output_Freq_60;
 LPF_Output_90=H.*Mixer_Output_Freq_90;
+%%%%%%%%%%%%%%%%%%%%%%% IFT to get Filtered Ask Received Signal %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Ask_Received =real(ifft(ifftshift(LPF_Output)/ts));
 Ask_Received_30 =real(ifft(ifftshift(LPF_Output_30)/ts));
 Ask_Received_60 =real(ifft(ifftshift(LPF_Output_60)/ts));
@@ -100,19 +108,20 @@ figure(5)
 subplot(4,1,1);
 plot (t,Ask_Received);
 xlabel('time');
-title('ASK phase 0 Received');
+title('ASK phase 0 Received'); %Received Ask Message Without Phase Error
 subplot(4,1,2);
 plot (t,Ask_Received_30);
 xlabel('time');
-title('ASK phase 30 Received');
+title('ASK phase 30 Received'); %Phase 30 Amplitudes are Aprroximately Equal to Received Ask Amplitudes divided by 6.4
 subplot(4,1,3);
 plot (t,Ask_Received_60);
 xlabel('time');
-title('ASK phase 60 Received');
+title('ASK phase 60 Received'); %Phase 60 Amplitudes are Equal to Received Ask Amplitudes Multiplied by -1 (Inverted)
 subplot(4,1,4);
 plot (t,Ask_Received_90);
 xlabel('time');
-title('ASK phase 90 Received');
+title('ASK phase 90 Received');  %Phase 90 Amplitudes are Approximately Equal to Phase 60 Amplitudes divided by 2
+%{
 Output=zeros(size(t));
 for i = 1:6400
     if (Ask_Received(i)>=2.25) Output(i)=1;
@@ -150,3 +159,4 @@ subplot(4,1,4);
 plot (t,Output_90);
 xlabel('time');
 title('Output Phase 90');
+%}
