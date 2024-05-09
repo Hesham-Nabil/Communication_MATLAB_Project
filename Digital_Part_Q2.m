@@ -4,11 +4,11 @@ close all
 bits = 64;
 stream =randi([0, 1], 1, bits);
 
-ts = 0.05;
+ts = 0.01;
 T = bits;
 t = 0 : 0.01 : (bits-0.01);
 fs = 1 / ts;
-df =  0.01*fs / T;
+df =  1 / T;
 f = -0.5 * fs : df : 0.5 * fs - df;
 unipolar=zeros(size(t));
 for i = 1:bits
@@ -94,7 +94,7 @@ plot (f,abs(Mixer_Output_Freq_90));
 xlabel('frequency');
 title('ASK after Carrier phase 90');
 %%%%%%%%%%%%%%%%%%%%%%% LPF Applied at f=1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-H= abs(f)<= 1;
+H= abs(f)<= 5;
 LPF_Output=H.*Mixer_Output_Freq;
 LPF_Output_30=H.*Mixer_Output_Freq_30;
 LPF_Output_60=H.*Mixer_Output_Freq_60;
@@ -112,7 +112,7 @@ title('ASK phase 0 Received'); %Received Ask Message Without Phase Error
 subplot(4,1,2);
 plot (t,Ask_Received_30);
 xlabel('time');
-title('ASK phase 30 Received'); %Phase 30 Amplitudes are Aprroximately Equal to Received Ask Amplitudes divided by 6.4
+title('ASK phase 30 Received'); %Phase 30 Amplitudes are Aprroximately Equal to Received Ask Amplitudes divided by 6.4 , Also Lowest SNR
 subplot(4,1,3);
 plot (t,Ask_Received_60);
 xlabel('time');
