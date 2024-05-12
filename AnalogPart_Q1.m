@@ -2,14 +2,14 @@ clc;
 clear;
 close all
 
-###########################    Time Domain    ###########################
+%###########################    Time Domain    ###########################
 
 ts = 0.01;                   %Time step
 T = 100;                     %simulation time
 N = ceil(T/ts);              %number of time samples
 t = -(N/2)*ts : ts : ((N-1)/2)*ts;       %time vector
 
-###########################  frequency domain  ##########################
+%###########################  frequency domain  ##########################
 
 fs = 100;   %1/ts
 df = 0.01;  %fs/N
@@ -19,7 +19,7 @@ else
   f = -(0.5*fs-0.5*df): df : (0.5*fs-0.5*df);
 end
 
-###########################  BaseBand Signal  ###########################
+%###########################  BaseBand Signal  ###########################
 
 m = zeros(size(t));
 m(t >= -2 & t < -1) = t(t >= -2 & t < -1)+2;     % m(t) = t+2 for the range -2 <= t <= -1
@@ -28,21 +28,21 @@ m(t > 1 & t <= 2) = -t(t > 1 & t <= 2)+2;        % m(t) =-t+2 for the range  1 <
 
 figure(1)
 plot(t,m);
-xlabel('time');
+xlabel('t(s)');
 ylabel('Baseband Signal');
 title('Plot Of X(t)');
-
-#################  frequency respone of base band signal  #################
+grid on;
+%#################  frequency respone of base band signal  #################
 
 M = fftshift(fft(m))*ts;
-Analytical = -3 * sinc(f) .* sinc(3*f);
+Analytical = 3 * sinc(f) .* sinc(3*f);
 
-##############################    plotting   ##############################
+%##############################    plotting   ##############################
 
 figure(2)
 subplot(1,2,1)
 plot(f,abs(M));
-xlabel('time');
+xlabel('Frequency');
 ylabel('Frequency respone of m(t)');
 title('M(f)');
 subplot(1,2,2)
@@ -52,7 +52,7 @@ ylabel('Frequency respone of m(t)');
 title('Analytical Solution');
 
 
-############################        Bandwidth       #########################
+%############################        Bandwidth       #########################
 
 Total_Energy_in_Freq = sum(abs(M).^2)*df;      % ∑ M^2 df
 
@@ -66,7 +66,7 @@ for(index = zero_freq : length(f) )
   end
 end
 
-##########################   Ideal LowPass Filter BW=1HZ   #######################
+%##########################   Ideal LowPass Filter BW=1HZ   #######################
 H1 = zeros(size(Analytical));
 H1 = abs(f)<(1+df);
 Filtered_Signal1 = M.*H1;
@@ -83,7 +83,7 @@ xlabel('Frequency (Hz)')
 ylabel('|H(f)|')
 title('Filtered_Signal with BW = 1Hz')
 
-#########################   Ideal LowPass Filter BW=0.3HZ   ######################
+%#########################   Ideal LowPass Filter BW=0.3HZ   ######################
 
 H2 = zeros(size(Analytical));
 H2 = abs(f)<(0.3+df);
