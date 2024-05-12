@@ -1,14 +1,16 @@
 clc;
 clear;
 close all
-bits = 64;
-stream =randi([0, 1], 1, bits);
-% stream = zeros(1,64);
-ts = bits;
-T = 100*bits;
-t = 0 : 1 : (100*bits-1);
+bits = 70;
+% stream =randi([0, 1], 1, bits);S
+% stream = zeros(1,70);
+stream = ones(1,70);
+% stream(1)=1;
+ts = 0.01;
+T = bits;
+t = 0 : 0.01 : (bits-0.01);
 fs = 1 / ts;
-df =  fs / T;
+df =  1 / T;
 f = -0.5 * fs : df : 0.5 * fs - df;
 
 bipolar = zeros(size(t));
@@ -29,13 +31,26 @@ end
 BIPOLAR = fftshift(fft(bipolar))*ts;
 UNIPOLAR= fftshift(fft(unipolar))*ts;
 
-power_spectrum = abs(BIPOLAR).^2;  % Power spectrum
-
-% Determine bandwidth
-max_power = max(power_spectrum);  % Maximum power
-threshold_power = 0.05 * max_power;  % Threshold power (5% of max power)
-bandwidth_indices = find(power_spectrum >= threshold_power);  % Find indices where power exceeds threshold
-bandwidth = abs(f(bandwidth_indices(end)) - f(bandwidth_indices(1)));  % Compute bandwidth
+Total_Energy_in_Freq = sum(abs(BIPOLAR).^2)*df;      % ∑ M^2 df
+zero_freq = find(f==0);   %since the spectrum is even around the y-axis, we need to find the component number in the middle at f==0
+Energy_accumulator=0;
+for(index = zero_freq : length(f) )
+  Energy_accumulator =  Energy_accumulator + (abs(BIPOLAR(index)).^2)*df;   %accumulating the energy of all components until we reach the end of the spectrum
+  if(Energy_accumulator >= (0.95/2)*Total_Energy_in_Freq); %0.95/2 because we are calculating the power of the right half of the spectrum so the total power is expected to be 50%
+    BandwidthB = f(index)
+    break
+  end
+end
+Total_Energy_in_Freq = sum(abs(UNIPOLAR).^2)*df; 
+zero_freq = find(f==0);   %since the spectrum is even around the y-axis, we need to find the component number in the middle at f==0
+Energy_accumulator=0;
+for(index = zero_freq : length(f) )
+  Energy_accumulator =  Energy_accumulator + (abs(UNIPOLAR(index)).^2)*df;   %accumulating the energy of all components until we reach the end of the spectrum
+  if(Energy_accumulator >= (0.95/2)*Total_Energy_in_Freq); %0.95/2 because we are calculating the power of the right half of the spectrum so the total power is expected to be 50%
+    BandwidthU = f(index)
+    break
+  end
+end
 
 figure(1)
 plot(t, bipolar);
