@@ -227,7 +227,7 @@ legend('Input Signal','Filtered Signal')
 
 fc1=20;                                                 % Carrier Freq 1
 c1= cos(2*pi*fc1*t);                                    % Carrier Signal 1
-s1 = filtered_signal1 .*c1                              % modulated x(t)
+s1 = filtered_signal1 .*c1 ;                             % modulated x(t)
 S1= fftshift(fft(s1))*ts;                               % Transform of S1
 F1= zeros(size(s1));                                    % BPF FOR X(T)
 F1= ((abs(f) > (18.5-df )) & ((21.5+df) > abs(f)));     % FROM 18.5 TO 21.5 FOR X(T)
