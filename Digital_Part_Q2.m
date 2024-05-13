@@ -21,9 +21,6 @@ UNIPOLAR= fftshift(fft(unipolar))*ts;
 %%%%%%%%%%%%%%%%%%%%%%% Ask Signal Formation in time & Freq Domain %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 fc=5;
 c=3*cos(2*pi*fc*t);
-C_30=3*cos(2*pi*fc*t+30);
-C_60=3*cos(2*pi*fc*t+60);
-C_90=3*cos(2*pi*fc*t+90);
 transmitted=c.*unipolar;
 Transmitted= fftshift(fft(transmitted))*ts;
 %%%%%%%%%%%%%%%%%%%%%%% Plotting Unipolar and Ask Temporal %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -49,6 +46,10 @@ title('Spectral Domain Of Ask');
 grid on;
 %%%%%%%%%%%%%%%%%%%%%%% Multiplying Carriers with different phase errors to Ask at Receiver %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 mixer_output=transmitted.*(c);
+To_Rad=pi/180;
+C_30=3*cos(2*pi*fc*t+(To_Rad*30));
+C_60=3*cos(2*pi*fc*t+(To_Rad*60));
+C_90=3*cos(2*pi*fc*t+(To_Rad*90));
 mixer_output_30=C_30.*transmitted;
 mixer_output_60=C_60.*transmitted;
 mixer_output_90=C_90.*transmitted;
@@ -121,53 +122,76 @@ subplot(4,1,4);
 plot (t,received_90);
 xlabel('time');
 title('ASK phase 90 Received');  %Phase 90 Amplitudes are Approximately Equal to Phase 60 Amplitudes divided by 2
+
+Received= fftshift(fft(received))*ts;
+Received_30= fftshift(fft(received_30))*ts;
+Received_60= fftshift(fft(received_60))*ts;
+Received_90= fftshift(fft(received_90))*ts;
+figure(6)
+subplot(4,1,1);
+plot (f,abs(Received));
+xlabel('frequency');
+title('ASK phase 0 Received');
+subplot(4,1,2);
+plot (f,abs(Received_30));
+xlabel('frequency');
+title('ASK phase 30 Received');
+subplot(4,1,3);
+plot (f,abs(Received_60));
+xlabel('frequency');
+title('ASK phase 60 Received');
+subplot(4,1,4);
+plot (f,abs(Received_90));
+xlabel('frequency');
+title('ASK phase 90 Received');
+
 output= zeros(size(t));
 for i = 1:(bits*100)
-    if received(i) <0.5 && received(i) >-0.5 
+    if received(i) <0.5 && received(i) >-0.5
         output(i) = 0;
     else
         output(i) = 1;
     end
 end
-figure(6)
+figure(7)
 plot (t,output);
 xlabel('time');
 title('ASK Received');
 output_30= zeros(size(t));
 for i = 1:(bits*100)
-    if received_30(i) <0.5 && received_30(i) >-0.5 
+    if received_30(i) <0.5 && received_30(i) >-0.5
         output_30(i) = 0;
     else
         output_30(i) = 1;
     end
 end
-figure(7)
+figure(8)
 plot (t,output_30);
 xlabel('time');
 title('ASK phase 30 Received');
 
 output_60= zeros(size(t));
 for i = 1:(bits*100)
-    if received_60(i) <0.5 && received_60(i) >-0.5 
+    if received_60(i) <0.5 && received_60(i) >-0.5
         output_60(i) = 0;
     else
         output_60(i) = 1;
     end
 end
-figure(8)
+figure(9)
 plot (t,output_60);
 xlabel('time');
 title('ASK phase 60 Received');
 
 output_90= zeros(size(t));
 for i = 1:(bits*100)
-    if received_90(i) <0.5 && received_90(i) >-0.5 
+    if received_90(i) <0.5 && received_90(i) >-0.5
         output_90(i) = 0;
     else
         output_90(i) = 1;
     end
 end
-figure(9)
+figure(10)
 plot (t,output_90);
 xlabel('time');
-title('ASK phase 600 Received');
+title('ASK phase 90 Received');
