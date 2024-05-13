@@ -147,51 +147,55 @@ title('ASK phase 90 Received');
 
 output= zeros(size(t));
 for i = 1:(bits*100)
-    if received(i) <0.5 && received(i) >-0.5
+    if received(i) < 2.25
         output(i) = 0;
     else
         output(i) = 1;
     end
 end
-figure(7)
-plot (t,output);
-xlabel('time');
-title('ASK Received');
+
 output_30= zeros(size(t));
 for i = 1:(bits*100)
-    if received_30(i) <0.5 && received_30(i) >-0.5
+    if received_30(i) < 2.25
         output_30(i) = 0;
     else
         output_30(i) = 1;
     end
 end
-figure(8)
-plot (t,output_30);
-xlabel('time');
-title('ASK phase 30 Received');
+
 
 output_60= zeros(size(t));
 for i = 1:(bits*100)
-    if received_60(i) <0.5 && received_60(i) >-0.5
+    if received_60(i) < 2.25
         output_60(i) = 0;
     else
         output_60(i) = 1;
     end
 end
-figure(9)
-plot (t,output_60);
-xlabel('time');
-title('ASK phase 60 Received');
+
 
 output_90= zeros(size(t));
 for i = 1:(bits*100)
-    if received_90(i) <0.5 && received_90(i) >-0.5
+    if received_90(i) <2.25
         output_90(i) = 0;
     else
         output_90(i) = 1;
     end
 end
-figure(10)
+figure(6)
+subplot(4,1,1);
+plot (t,output);
+xlabel('time');
+title('Output Phase 0');
+subplot(4,1,2);
+plot (t,output_30);
+xlabel('time');
+title('Output Phase 30');
+subplot(4,1,3);
+plot (t,output_60);
+xlabel('time');
+title('Output Phase 60');
+subplot(4,1,4);
 plot (t,output_90);
 xlabel('time');
-title('ASK phase 90 Received');
+title('Output Phase 90');
